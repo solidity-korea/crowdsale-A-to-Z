@@ -4,7 +4,7 @@ import "./openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.s
 import "./openzeppelin-solidity/contracts/crowdsale/distribution/FinalizableCrowdsale.sol";
 import "./MyMintableToken.sol";
 
-contract MyCrowdsale is CappedCrowdsale, FinalizableCrowdsale {
+contract CappedCrowdsaleExample is CappedCrowdsale, FinalizableCrowdsale {
 
     function MyCrowdsale(uint256 _startTime, uint256 _endTime, uint256 _rate, uint256 _cap, address _wallet) public
     CappedCrowdsale(_cap)

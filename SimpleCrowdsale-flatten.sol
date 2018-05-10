@@ -1,77 +1,6 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.23;
 
-
-
-/**
- * @title Ownable
- * @dev The Ownable contract has an owner address, and provides basic authorization control
- * functions, this simplifies the implementation of "user permissions".
- */
-contract Ownable {
-  address public owner;
-
-
-  event OwnershipRenounced(address indexed previousOwner);
-  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-
-
-  /**
-   * @dev The Ownable constructor sets the original `owner` of the contract to the sender
-   * account.
-   */
-  constructor() public {
-    owner = msg.sender;
-  }
-
-  /**
-   * @dev Throws if called by any account other than the owner.
-   */
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    _;
-  }
-
-  /**
-   * @dev Allows the current owner to transfer control of the contract to a newOwner.
-   * @param newOwner The address to transfer ownership to.
-   */
-  function transferOwnership(address newOwner) public onlyOwner {
-    require(newOwner != address(0));
-    emit OwnershipTransferred(owner, newOwner);
-    owner = newOwner;
-  }
-
-  /**
-   * @dev Allows the current owner to relinquish control of the contract.
-   */
-  function renounceOwnership() public onlyOwner {
-    emit OwnershipRenounced(owner);
-    owner = address(0);
-  }
-}
-
-/**
- * @title ERC20Basic
- * @dev Simpler version of ERC20 interface
- * @dev see https://github.com/ethereum/EIPs/issues/179
- */
-contract ERC20Basic {
-  function totalSupply() public view returns (uint256);
-  function balanceOf(address who) public view returns (uint256);
-  function transfer(address to, uint256 value) public returns (bool);
-  event Transfer(address indexed from, address indexed to, uint256 value);
-}
-
-/**
- * @title ERC20 interface
- * @dev see https://github.com/ethereum/EIPs/issues/20
- */
-contract ERC20 is ERC20Basic {
-  function allowance(address owner, address spender) public view returns (uint256);
-  function transferFrom(address from, address to, uint256 value) public returns (bool);
-  function approve(address spender, uint256 value) public returns (bool);
-  event Approval(address indexed owner, address indexed spender, uint256 value);
-}
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/openzeppelin-solidity/contracts/math/SafeMath.sol
 
 /**
  * @title SafeMath
@@ -82,11 +11,11 @@ library SafeMath {
   /**
   * @dev Multiplies two numbers, throws on overflow.
   */
-  function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+  function mul(uint256 a, uint256 b) internal pure returns (uint256 c) {
     if (a == 0) {
       return 0;
     }
-    uint256 c = a * b;
+    c = a * b;
     assert(c / a == b);
     return c;
   }
@@ -96,9 +25,9 @@ library SafeMath {
   */
   function div(uint256 a, uint256 b) internal pure returns (uint256) {
     // assert(b > 0); // Solidity automatically throws when dividing by 0
-    uint256 c = a / b;
+    // uint256 c = a / b;
     // assert(a == b * c + a % b); // There is no case in which this doesn't hold
-    return c;
+    return a / b;
   }
 
   /**
@@ -112,12 +41,28 @@ library SafeMath {
   /**
   * @dev Adds two numbers, throws on overflow.
   */
-  function add(uint256 a, uint256 b) internal pure returns (uint256) {
-    uint256 c = a + b;
+  function add(uint256 a, uint256 b) internal pure returns (uint256 c) {
+    c = a + b;
     assert(c >= a);
     return c;
   }
 }
+
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/openzeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol
+
+/**
+ * @title ERC20Basic
+ * @dev Simpler version of ERC20 interface
+ * @dev see https://github.com/ethereum/EIPs/issues/179
+ */
+contract ERC20Basic {
+  function totalSupply() public view returns (uint256);
+  function balanceOf(address who) public view returns (uint256);
+  function transfer(address to, uint256 value) public returns (bool);
+  event Transfer(address indexed from, address indexed to, uint256 value);
+}
+
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/openzeppelin-solidity/contracts/token/ERC20/BasicToken.sol
 
 /**
  * @title Basic token
@@ -146,10 +91,9 @@ contract BasicToken is ERC20Basic {
     require(_to != address(0));
     require(_value <= balances[msg.sender]);
 
-    // SafeMath.sub will throw if there is not enough balance.
     balances[msg.sender] = balances[msg.sender].sub(_value);
     balances[_to] = balances[_to].add(_value);
-    Transfer(msg.sender, _to, _value);
+    emit Transfer(msg.sender, _to, _value);
     return true;
   }
 
@@ -158,11 +102,26 @@ contract BasicToken is ERC20Basic {
   * @param _owner The address to query the the balance of.
   * @return An uint256 representing the amount owned by the passed address.
   */
-  function balanceOf(address _owner) public view returns (uint256 balance) {
+  function balanceOf(address _owner) public view returns (uint256) {
     return balances[_owner];
   }
 
 }
+
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol
+
+/**
+ * @title ERC20 interface
+ * @dev see https://github.com/ethereum/EIPs/issues/20
+ */
+contract ERC20 is ERC20Basic {
+  function allowance(address owner, address spender) public view returns (uint256);
+  function transferFrom(address from, address to, uint256 value) public returns (bool);
+  function approve(address spender, uint256 value) public returns (bool);
+  event Approval(address indexed owner, address indexed spender, uint256 value);
+}
+
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol
 
 /**
  * @title Standard ERC20 token
@@ -190,7 +149,7 @@ contract StandardToken is ERC20, BasicToken {
     balances[_from] = balances[_from].sub(_value);
     balances[_to] = balances[_to].add(_value);
     allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
-    Transfer(_from, _to, _value);
+    emit Transfer(_from, _to, _value);
     return true;
   }
 
@@ -206,7 +165,7 @@ contract StandardToken is ERC20, BasicToken {
    */
   function approve(address _spender, uint256 _value) public returns (bool) {
     allowed[msg.sender][_spender] = _value;
-    Approval(msg.sender, _spender, _value);
+    emit Approval(msg.sender, _spender, _value);
     return true;
   }
 
@@ -232,7 +191,7 @@ contract StandardToken is ERC20, BasicToken {
    */
   function increaseApproval(address _spender, uint _addedValue) public returns (bool) {
     allowed[msg.sender][_spender] = allowed[msg.sender][_spender].add(_addedValue);
-    Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
+    emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
     return true;
   }
 
@@ -253,60 +212,33 @@ contract StandardToken is ERC20, BasicToken {
     } else {
       allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue);
     }
-    Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
+    emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
     return true;
   }
 
 }
 
-/**
- * @title Mintable token
- * @dev Simple ERC20 Token example, with mintable token creation
- * @dev Issue: * https://github.com/OpenZeppelin/zeppelin-solidity/issues/120
- * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol
- */
-contract MintableToken is StandardToken, Ownable {
-  event Mint(address indexed to, uint256 amount);
-  event MintFinished();
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/SimpleToken.sol
 
-  bool public mintingFinished = false;
+contract SimpleToken is StandardToken {
+    string public constant name = "My Simple Token";
+    string public constant symbol = "MST";
+    uint8 public constant decimals = 18;
 
+    uint256 public constant INITIAL_SUPPLY = 10000 * (10 ** uint256(decimals));
 
-  modifier canMint() {
-    require(!mintingFinished);
-    _;
-  }
+    constructor() public {
+        totalSupply_ = INITIAL_SUPPLY;
+        balances[msg.sender] = INITIAL_SUPPLY;
+        emit Transfer(0x0, msg.sender, INITIAL_SUPPLY);
+    }
 
-  /**
-   * @dev Function to mint tokens
-   * @param _to The address that will receive the minted tokens.
-   * @param _amount The amount of tokens to mint.
-   * @return A boolean that indicates if the operation was successful.
-   */
-  function mint(address _to, uint256 _amount) onlyOwner canMint public returns (bool) {
-    totalSupply_ = totalSupply_.add(_amount);
-    balances[_to] = balances[_to].add(_amount);
-    Mint(_to, _amount);
-    Transfer(address(0), _to, _amount);
-    return true;
-  }
-
-  /**
-   * @dev Function to stop minting new tokens.
-   * @return True if the operation was successful.
-   */
-  function finishMinting() onlyOwner canMint public returns (bool) {
-    mintingFinished = true;
-    MintFinished();
-    return true;
-  }
+//    constructor(uint256 _initialSupply) public {
+//        if ( _initialSupply != 0) totalSupply_ = _initialSupply;
+//    }
 }
 
-contract MyToken is MintableToken {
-  string public constant name = "My Token";
-  string public constant symbol = "MYT";
-  uint8 public constant decimals = 18;
-}
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/openzeppelin-solidity/contracts/crowdsale/Crowdsale.sol
 
 /**
  * @title Crowdsale
@@ -316,11 +248,10 @@ contract MyToken is MintableToken {
  * functionality and/or custom behavior.
  * The external interface represents the basic interface for purchasing tokens, and conform
  * the base architecture for crowdsales. They are *not* intended to be modified / overriden.
- * The internal interface conforms the extensible and modifiable surface of crowdsales. Override 
+ * The internal interface conforms the extensible and modifiable surface of crowdsales. Override
  * the methods to add functionality. Consider using 'super' where appropiate to concatenate
  * behavior.
  */
-
 contract Crowdsale {
   using SafeMath for uint256;
 
@@ -387,7 +318,12 @@ contract Crowdsale {
     weiRaised = weiRaised.add(weiAmount);
 
     _processPurchase(_beneficiary, tokens);
-    TokenPurchase(msg.sender, _beneficiary, weiAmount, tokens);
+    emit TokenPurchase(
+      msg.sender,
+      _beneficiary,
+      weiAmount,
+      tokens
+    );
 
     _updatePurchasingState(_beneficiary, weiAmount);
 
@@ -462,171 +398,18 @@ contract Crowdsale {
   }
 }
 
-/**
- * @title TimedCrowdsale
- * @dev Crowdsale accepting contributions only within a time frame.
- */
-contract TimedCrowdsale is Crowdsale {
-  using SafeMath for uint256;
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/SimpleCrowdsale.sol
 
-  uint256 public openingTime;
-  uint256 public closingTime;
+contract SimpleCrowdsale is Crowdsale {
+    // function SimpleCrowdsale
 
-  /**
-   * @dev Reverts if not in crowdsale time range. 
-   */
-  modifier onlyWhileOpen {
-    require(now >= openingTime && now <= closingTime);
-    _;
-  }
+    uint256 _rate = 2;
+    address _wallet = msg.sender;
+    ERC20 _token = new SimpleToken();
 
-  /**
-   * @dev Constructor, takes crowdsale opening and closing times.
-   * @param _openingTime Crowdsale opening time
-   * @param _closingTime Crowdsale closing time
-   */
-  function TimedCrowdsale(uint256 _openingTime, uint256 _closingTime) public {
-    require(_openingTime >= now);
-    require(_closingTime >= _openingTime);
-
-    openingTime = _openingTime;
-    closingTime = _closingTime;
-  }
-
-  /**
-   * @dev Checks whether the period in which the crowdsale is open has already elapsed.
-   * @return Whether crowdsale period has elapsed
-   */
-  function hasClosed() public view returns (bool) {
-    return now > closingTime;
-  }
-  
-  /**
-   * @dev Extend parent behavior requiring to be within contributing period
-   * @param _beneficiary Token purchaser
-   * @param _weiAmount Amount of wei contributed
-   */
-  function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal onlyWhileOpen {
-    super._preValidatePurchase(_beneficiary, _weiAmount);
-  }
-
-}
-
-/**
- * @title FinalizableCrowdsale
- * @dev Extension of Crowdsale where an owner can do extra work
- * after finishing.
- */
-contract FinalizableCrowdsale is TimedCrowdsale, Ownable {
-  using SafeMath for uint256;
-
-  bool public isFinalized = false;
-
-  event Finalized();
-
-  /**
-   * @dev Must be called after crowdsale ends, to do some extra finalization
-   * work. Calls the contract's finalization function.
-   */
-  function finalize() onlyOwner public {
-    require(!isFinalized);
-    require(hasClosed());
-
-    finalization();
-    Finalized();
-
-    isFinalized = true;
-  }
-
-  /**
-   * @dev Can be overridden to add finalization logic. The overriding function
-   * should call super.finalization() to ensure the chain of finalization is
-   * executed entirely.
-   */
-  function finalization() internal {
-  }
-}
-
-/**
- * @title CappedCrowdsale
- * @dev Crowdsale with a limit for total contributions.
- */
-contract CappedCrowdsale is Crowdsale {
-  using SafeMath for uint256;
-
-  uint256 public cap;
-
-  /**
-   * @dev Constructor, takes maximum amount of wei accepted in the crowdsale.
-   * @param _cap Max amount of wei to be contributed
-   */
-  function CappedCrowdsale(uint256 _cap) public {
-    require(_cap > 0);
-    cap = _cap;
-  }
-
-  /**
-   * @dev Checks whether the cap has been reached. 
-   * @return Whether the cap was reached
-   */
-  function capReached() public view returns (bool) {
-    return weiRaised >= cap;
-  }
-
-  /**
-   * @dev Extend parent behavior requiring purchase to respect the funding cap.
-   * @param _beneficiary Token purchaser
-   * @param _weiAmount Amount of wei contributed
-   */
-  function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal {
-    super._preValidatePurchase(_beneficiary, _weiAmount);
-    require(weiRaised.add(_weiAmount) <= cap);
-  }
-
-}
-
-contract MyCrowdsale is CappedCrowdsale, FinalizableCrowdsale {
-
-  function MyCrowdsale(uint256 _startTime, uint256 _endTime, uint256 _rate, uint256 _cap, address _wallet) public
-    CappedCrowdsale(_cap)
-    Crowdsale(_startTime, _endTime, _rate, _wallet)
-  {
-  }
-
-  // Create a custom token to mint instead of the default MintableToken
-  function createTokenContract() internal returns (MintableToken) {
-    return new MyToken();
-  }
-
-  // Override to indicate when the crowdsale ends and does not accept any more contributions
-  // Checks endTime by default, plus cap from CappedCrowdsale
-  function hasEnded() public view returns (bool) {
-    return super.hasEnded();
-  }
-
-  // Override this method to have a way to add business logic to your crowdsale when buying
-  // Returns weiAmount times rate by default
-  function getTokenAmount(uint256 weiAmount) internal view returns(uint256) {
-    return super.getTokenAmount(weiAmount);
-  }
-
-  // Override to create custom fund forwarding mechanisms
-  // Forwards funds to the specified wallet by default
-  function forwardFunds() internal {
-    return super.forwardFunds();
-  }
-
-  // Criteria for accepting a purchase
-  // Make sure to call super.validPurchase(), or all the criteria from parents will be overwritten.
-  function validPurchase() internal view returns (bool) {
-    return super.validPurchase();
-  }
-
-  // Override to execute any logic once the crowdsale finalizes
-  // Requires a call to the public finalize method, only after the sale hasEnded
-  // Remember that super.finalization() calls the token finishMinting(),
-  // so no new tokens can be minted after that
-  function finalization() internal {
-    super.finalization();
-  }
+    //constructor(uint256 _rate, address _wallet, ERC20 _token) public
+    constructor() public
+    Crowdsale(_rate, _wallet, _token) {
+    
+    }
 }

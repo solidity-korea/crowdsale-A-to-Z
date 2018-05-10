@@ -1,10 +1,9 @@
 pragma solidity ^0.4.23;
 
-import "./openzeppelin-solidity/contracts/crowdsale/Crowdsale.sol";
+import "./openzeppelin-solidity/contracts/crowdsale/distribution/FinalizableCrowdsale.sol";
 import "./SimpleToken.sol";
 
-contract SimpleCrowdsale is Crowdsale {
-    // function SimpleCrowdsale
+contract FinalizableCrowdsaleExample is FinalizableCrowdsale {
 
     uint256 _rate = 2;
     address _wallet = msg.sender;
