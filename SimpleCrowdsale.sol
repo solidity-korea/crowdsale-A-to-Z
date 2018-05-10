@@ -6,9 +6,9 @@ import "./SimpleToken.sol";
 contract SimpleCrowdsale is Crowdsale {
     // function SimpleCrowdsale
 
-    uint256 public _rate = 2;
-    address _wallet;
-    ERC20 _token;
+    uint256 _rate = 2;
+    address _wallet = msg.sender;
+    ERC20 _token = new SimpleToken();
 
     //constructor(uint256 _rate, address _wallet, ERC20 _token) public
     constructor() public
