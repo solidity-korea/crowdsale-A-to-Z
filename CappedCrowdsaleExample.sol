@@ -1,14 +1,18 @@
 pragma solidity ^0.4.23;
 
 import "./openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol";
-import "./openzeppelin-solidity/contracts/crowdsale/distribution/FinalizableCrowdsale.sol";
-import "./MyMintableToken.sol";
+import "./SimpleToken.sol";
 
-contract CappedCrowdsaleExample is CappedCrowdsale, FinalizableCrowdsale {
+contract CappedCrowdsaleExample is CappedCrowdsale {
+    uint256 _rate = 2;
+    address _wallet = msg.sender;
+    ERC20 _token = new SimpleToken();
+    uint256 _cap = 10 ether;
 
-    function MyCrowdsale(uint256 _startTime, uint256 _endTime, uint256 _rate, uint256 _cap, address _wallet) public
+    // constructor(uint256 _cap, uint256 _rate, address _wallet, ERC20 _token) public
+    constructor() public
     CappedCrowdsale(_cap)
-    Crowdsale(_startTime, _endTime, _rate, _wallet) {
+    Crowdsale(_rate, _wallet, _token) {
 
     }
 }
