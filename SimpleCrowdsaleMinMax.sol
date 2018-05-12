@@ -3,7 +3,7 @@ pragma solidity ^0.4.23;
 import "./openzeppelin-solidity/contracts/crowdsale/Crowdsale.sol";
 import "./SimpleToken.sol";
 
-contract SimpleCrowdsale is Crowdsale {
+contract SimpleCrowdsaleMinMax is Crowdsale {
     // function SimpleCrowdsale
 
     uint256 _rate = 2;
