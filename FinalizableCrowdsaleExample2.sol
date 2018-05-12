@@ -9,7 +9,7 @@ contract FinalizableCrowdsaleExample is FinalizableCrowdsale {
     address _wallet = msg.sender;
     ERC20 _token = new SimpleToken();
     uint256 _openingTime = now + 60;
-    uint256 _closingTime = now + 60 * 3; // Sample Data, 10 min
+    uint256 _closingTime = now + 60 * 10; // Sample Data, 10 min
 
     //constructor(uint256 _rate, address _wallet, ERC20 _token) public
     constructor() public
@@ -19,6 +19,17 @@ contract FinalizableCrowdsaleExample is FinalizableCrowdsale {
     }
 
     function finalization() internal {
+        super.finalization();
+        _deliverTokens(owner, token.balanceOf(this));
+        //token.transfer(owner, token.balanceOf(this));
+    }
+
+    function isOpen() public view returns (bool) {
+        return closingTime >= block.timestamp;
+    }
+
+    function viewNow() public view returns (uint256) {
+        return block.timestamp;  // or now
     }
 
 }

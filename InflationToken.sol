@@ -1,5 +1,10 @@
 pragma solidity ^0.4.23;
 
+/* from https://github.com/LanguageNetwork/smart-contracts
+* @title InflationToken
+* @author dongsamb, LangNet.io
+*/
+
 import "./openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 import "./openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./MathUtils.sol";
@@ -24,7 +29,7 @@ contract InflationToken is StandardToken {
     event Inflation(uint256 indexed inflationCount, address indexed inflationCaller, uint256 totalSpply, uint256 inflationValue, uint256 inflationTime);
 
     // start time
-    function InflationToken(uint256 _annualInflationRate, uint256 _inflationPeriod, uint8 _decimals, uint256 _inflationStartTime, uint256 _inflationCallRewardAmount) public {
+    constructor(uint256 _annualInflationRate, uint256 _inflationPeriod, uint8 _decimals, uint256 _inflationStartTime, uint256 _inflationCallRewardAmount) public {
 
         decimals = _decimals;
         
@@ -117,7 +122,7 @@ contract MyInflationToken is InflationToken {
     //uint256 public constant INITIAL_SUPPLY = 10000 * (10 ** uint256(decimals));
     uint256 public constant INITIAL_SUPPLY = 4000000000 * (10 ** uint256(decimals));
 
-    function LanguageToken(uint256 _annualInflationRate, uint256 _inflationPeriod, uint256 _inflationStartTime, uint256 _inflationCallRewardAmount) public
+    constructor(uint256 _annualInflationRate, uint256 _inflationPeriod, uint256 _inflationStartTime, uint256 _inflationCallRewardAmount) public
     InflationToken(_annualInflationRate, _inflationPeriod, decimals, _inflationStartTime, _inflationCallRewardAmount) {
         totalSupply_ = INITIAL_SUPPLY;
         balances[msg.sender] = INITIAL_SUPPLY;
