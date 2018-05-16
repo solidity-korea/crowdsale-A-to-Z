@@ -25,7 +25,7 @@ contract FinalizableCrowdsaleExample is FinalizableCrowdsale {
     }
 
     function isOpen() public view returns (bool) {
-        return closingTime >= block.timestamp;
+        return closingTime > block.timestamp;
     }
 
     function viewNow() public view returns (uint256) {
