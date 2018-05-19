@@ -398,7 +398,7 @@ contract Crowdsale {
   }
 }
 
-// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/UsdCrowdsale.sol
+// File: Library/Mobile Documents/com~apple~CloudDocs/git/contracts/solidity-korea/crowdsale-A-to-Z/UsdCrowdsale-2.sol
 
 //import "./ETHUSD.sol";
 
@@ -423,11 +423,12 @@ contract UsdCrowdsale is Crowdsale{
 
 
     function getRateWei(uint256 _wei) public view returns (uint256) {
-        // 구현 실습 ethUsdPrice, rate 기반으로 주어진 wei 에 대해 몇 Token 을 주어야되는지 계산
+        return ethUsdPrice.mul(_wei).mul(1 ether).mul(_rate).div(1 ether).div(10**floatingPoint);
     }
 
     function getRateEther(uint256 _ether) public view returns (uint256) {
-        // 구현 실습 ethUsdPrice, rate 기반으로 주어진 ether 에 대해 몇 Token 을 주어야되는지 계산
+        _ether = _ether.mul(10**18);
+        return getRateWei(_ether);
     }
 
     /**
@@ -450,7 +451,7 @@ contract UsdCrowdsale is Crowdsale{
      */
     function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
         // return _weiAmount.mul(rate);
-        // 구현 실습 getRateWei 를 재활용하여 구현
+        return getRateWei(_weiAmount);
     }
 
 }
